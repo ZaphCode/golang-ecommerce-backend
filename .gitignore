@@ -1,7 +1,11 @@
 /tmp
 .air.toml
 config/firebase_config.json
-config/dev_config.json
+config/app_config.json
 
 .idea
 .vscode
+db/
+.DS_Store
+.env
+skills/system

@@ -10,14 +10,9 @@ const docTemplate = `{
     "info": {
         "description": "{{escape .Description}}",
         "title": "{{.Title}}",
-        "termsOfService": "http://swagger.io/terms/",
         "contact": {
-            "name": "API Support",
-            "email": "fiber@swagger.io"
-        },
-        "license": {
-            "name": "Apache 2.0",
-            "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+            "name": "ZaphCode",
+            "url": "https://github.com/ZaphCode"
         },
         "version": "{{.Version}}"
     },
@@ -866,6 +861,61 @@ const docTemplate = `{
                     },
                     "406": {
                         "description": "Not Acceptable",
+                        "schema": {
+                            "$ref": "#/definitions/dtos.DetailRespErrDTO"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/dtos.DetailRespErrDTO"
+                        }
+                    }
+                }
+            }
+        },
+        "/order/get/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Get detailed order by id",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "order"
+                ],
+                "summary": "Get auth user detailed order",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Order ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dtos.DetailedOrderRespOKDTO"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/dtos.DetailRespErrDTO"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
                         "schema": {
                             "$ref": "#/definitions/dtos.DetailRespErrDTO"
                         }
@@ -1827,6 +1877,155 @@ const docTemplate = `{
                 }
             }
         },
+        "dtos.DetailedOrderDTO": {
+            "type": "object",
+            "required": [
+                "address_id",
+                "payment_id",
+                "products"
+            ],
+            "properties": {
+                "address": {
+                    "$ref": "#/definitions/dtos.AddressDTO"
+                },
+                "address_id": {
+                    "type": "string",
+                    "example": "8ded83fe-93c8-11ed-ab0f-d8bbc1a27048"
+                },
+                "amount": {
+                    "type": "integer",
+                    "example": 14500
+                },
+                "created_at": {
+                    "type": "integer",
+                    "example": 1674405183
+                },
+                "id": {
+                    "type": "string",
+                    "example": "8ded83fe-93c8-11ed-ab0f-d8bbc1a27048"
+                },
+                "paid": {
+                    "type": "boolean",
+                    "example": true
+                },
+                "payment_id": {
+                    "type": "string",
+                    "example": "pm_1NKPiEG8UXDxPRbaEDuh6BrU"
+                },
+                "products": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/dtos.DetailedOrderProductDTO"
+                    }
+                },
+                "status": {
+                    "type": "string",
+                    "example": "pending"
+                },
+                "updated_at": {
+                    "type": "integer",
+                    "example": 1674405181
+                }
+            }
+        },
+        "dtos.DetailedOrderProductDTO": {
+            "type": "object",
+            "required": [
+                "description",
+                "images_url",
+                "name",
+                "price",
+                "tags"
+            ],
+            "properties": {
+                "avalible": {
+                    "type": "boolean"
+                },
+                "category": {
+                    "type": "string",
+                    "example": "clothes"
+                },
+                "created_at": {
+                    "type": "integer",
+                    "example": 1674405183
+                },
+                "description": {
+                    "type": "string",
+                    "maxLength": 200,
+                    "minLength": 4,
+                    "example": "The best T-shirt in the world."
+                },
+                "discount_rate": {
+                    "type": "integer",
+                    "maximum": 100,
+                    "minimum": 0,
+                    "example": 23
+                },
+                "id": {
+                    "type": "string",
+                    "example": "8ded83fe-93c8-11ed-ab0f-d8bbc1a27048"
+                },
+                "images_url": {
+                    "type": "array",
+                    "maxItems": 10,
+                    "minItems": 1,
+                    "items": {
+                        "type": "string"
+                    },
+                    "example": [
+                        "https://example.com/image1.png",
+                        "https://example.com/image2.png"
+                    ]
+                },
+                "name": {
+                    "type": "string",
+                    "maxLength": 50,
+                    "minLength": 4,
+                    "example": "Black T-Shirt Addidas"
+                },
+                "price": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "example": 2599
+                },
+                "quantity": {
+                    "type": "integer",
+                    "example": 2
+                },
+                "tags": {
+                    "type": "array",
+                    "maxItems": 6,
+                    "items": {
+                        "type": "string"
+                    },
+                    "example": [
+                        "t-shirts",
+                        "clothes",
+                        "addidas"
+                    ]
+                },
+                "updated_at": {
+                    "type": "integer",
+                    "example": 1674405181
+                }
+            }
+        },
+        "dtos.DetailedOrderRespOKDTO": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/dtos.DetailedOrderDTO"
+                },
+                "message": {
+                    "type": "string",
+                    "example": "Data retrived!"
+                },
+                "status": {
+                    "type": "string",
+                    "example": "success"
+                }
+            }
+        },
         "dtos.NewAddressDTO": {
             "type": "object",
             "required": [
@@ -2640,8 +2839,8 @@ var SwaggerInfo = &swag.Spec{
 	Host:             "localhost:9000",
 	BasePath:         "/api",
 	Schemes:          []string{},
-	Title:            "Fiber Example API",
-	Description:      "This is a sample swagger for Fiber",
+	Title:            "Go E-commerce API",
+	Description:      "E-commerce REST API built with Go and Fiber using Clean Architecture.",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,
 }

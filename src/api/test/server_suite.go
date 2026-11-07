@@ -70,7 +70,7 @@ func (s *ServerSuite) SetupSuite() {
 	prodSvc := core.NewProductService(prodRepo, catRepo)
 	catSvc := core.NewCategoryService(catRepo, prodRepo)
 	addrSvc := core.NewAddressService(addrRepo, userRepo)
-	ordSvc := core.NewOrderService(ordRepo, addrRepo)
+	ordSvc := core.NewOrderService(ordRepo, addrRepo, prodRepo)
 	pmSvc := payment.NewStripePaymentService(s.cfg.Stripe.SecretKey, userRepo)
 	emailSvc := email.NewSmtpEmailService()
 	vldSvc := validation.NewValidationService()

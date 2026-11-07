@@ -12,16 +12,6 @@ type NewOrderDTO struct {
 	AddressID uuid.UUID             `json:"address_id" validate:"required" example:"8ded83fe-93c8-11ed-ab0f-d8bbc1a27048"`
 }
 
-type OrderDTO struct {
-	NewOrderDTO
-	ID        uuid.UUID `json:"id" example:"8ded83fe-93c8-11ed-ab0f-d8bbc1a27048"`
-	CreatedAt int64     `json:"created_at" example:"1674405183"`
-	Amount    int64     `json:"amount" example:"14500"`
-	Status    string    `json:"status" example:"pending"`
-	Paid      bool      `json:"paid" example:"true"`
-	UpdatedAt int64     `json:"updated_at" example:"1674405181"`
-}
-
 func (dto NewOrderDTO) AdaptToOrder(price int64, usrid uuid.UUID) domain.Order {
 	return domain.Order{
 		UserID:    usrid,
@@ -32,4 +22,25 @@ func (dto NewOrderDTO) AdaptToOrder(price int64, usrid uuid.UUID) domain.Order {
 		Status:    utils.StatusPending,
 		Paid:      false,
 	}
+}
+
+type OrderDTO struct {
+	NewOrderDTO
+	ID        uuid.UUID `json:"id" example:"8ded83fe-93c8-11ed-ab0f-d8bbc1a27048"`
+	CreatedAt int64     `json:"created_at" example:"1674405183"`
+	Amount    int64     `json:"amount" example:"14500"`
+	Status    string    `json:"status" example:"pending"`
+	Paid      bool      `json:"paid" example:"true"`
+	UpdatedAt int64     `json:"updated_at" example:"1674405181"`
+}
+
+type DetailedOrderDTO struct {
+	OrderDTO
+	Address  AddressDTO                `json:"address"`
+	Products []DetailedOrderProductDTO `json:"products"`
+}
+
+type DetailedOrderProductDTO struct {
+	ProductDTO
+	Quantity uint `json:"quantity" example:"2"`
 }

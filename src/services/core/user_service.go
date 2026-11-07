@@ -76,8 +76,8 @@ func (s *userService) GetAll() ([]domain.User, error) {
 		return nil, err
 	}
 
-	for _, user := range users {
-		hidePassword(&user)
+	for i := range users {
+		hidePassword(&users[i])
 	}
 
 	return users, nil

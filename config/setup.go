@@ -63,14 +63,7 @@ var (
 )
 
 func MustLoadConfig(path string) {
-	var file []byte
-	var err error
-
-	if IsProduction() {
-		file, err = os.ReadFile(path + "/prod_config.json")
-	} else {
-		file, err = os.ReadFile(path + "/dev_config.json")
-	}
+	file, err := os.ReadFile(path + "/app_config.json")
 
 	if err != nil {
 		panic(err)

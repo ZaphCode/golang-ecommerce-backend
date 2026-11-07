@@ -7,7 +7,6 @@ import (
 	"text/template"
 
 	"github.com/ZaphCode/clean-arch/config"
-	"github.com/ZaphCode/clean-arch/src/utils"
 )
 
 type smtpEmailServiceImpl struct{}
@@ -18,8 +17,6 @@ func NewSmtpEmailService() EmailService {
 
 func (s *smtpEmailServiceImpl) sendEmail(data EmailData) error {
 	cfg := config.Get()
-
-	utils.PrintWD()
 
 	subject := fmt.Sprintf("Subject: %s!\n", data.Subject)
 	mime := "MIME-version: 1.0;\nContent-Type: text/html; charset=\"UTF-8\";\n\n"

@@ -189,6 +189,117 @@ definitions:
         example: failure
         type: string
     type: object
+  dtos.DetailedOrderDTO:
+    properties:
+      address:
+        $ref: '#/definitions/dtos.AddressDTO'
+      address_id:
+        example: 8ded83fe-93c8-11ed-ab0f-d8bbc1a27048
+        type: string
+      amount:
+        example: 14500
+        type: integer
+      created_at:
+        example: 1674405183
+        type: integer
+      id:
+        example: 8ded83fe-93c8-11ed-ab0f-d8bbc1a27048
+        type: string
+      paid:
+        example: true
+        type: boolean
+      payment_id:
+        example: pm_1NKPiEG8UXDxPRbaEDuh6BrU
+        type: string
+      products:
+        items:
+          $ref: '#/definitions/dtos.DetailedOrderProductDTO'
+        type: array
+      status:
+        example: pending
+        type: string
+      updated_at:
+        example: 1674405181
+        type: integer
+    required:
+    - address_id
+    - payment_id
+    - products
+    type: object
+  dtos.DetailedOrderProductDTO:
+    properties:
+      avalible:
+        type: boolean
+      category:
+        example: clothes
+        type: string
+      created_at:
+        example: 1674405183
+        type: integer
+      description:
+        example: The best T-shirt in the world.
+        maxLength: 200
+        minLength: 4
+        type: string
+      discount_rate:
+        example: 23
+        maximum: 100
+        minimum: 0
+        type: integer
+      id:
+        example: 8ded83fe-93c8-11ed-ab0f-d8bbc1a27048
+        type: string
+      images_url:
+        example:
+        - https://example.com/image1.png
+        - https://example.com/image2.png
+        items:
+          type: string
+        maxItems: 10
+        minItems: 1
+        type: array
+      name:
+        example: Black T-Shirt Addidas
+        maxLength: 50
+        minLength: 4
+        type: string
+      price:
+        example: 2599
+        minimum: 0
+        type: integer
+      quantity:
+        example: 2
+        type: integer
+      tags:
+        example:
+        - t-shirts
+        - clothes
+        - addidas
+        items:
+          type: string
+        maxItems: 6
+        type: array
+      updated_at:
+        example: 1674405181
+        type: integer
+    required:
+    - description
+    - images_url
+    - name
+    - price
+    - tags
+    type: object
+  dtos.DetailedOrderRespOKDTO:
+    properties:
+      data:
+        $ref: '#/definitions/dtos.DetailedOrderDTO'
+      message:
+        example: Data retrived!
+        type: string
+      status:
+        example: success
+        type: string
+    type: object
   dtos.NewAddressDTO:
     properties:
       city:
@@ -780,14 +891,10 @@ definitions:
 host: localhost:9000
 info:
   contact:
-    email: fiber@swagger.io
-    name: API Support
-  description: This is a sample swagger for Fiber
-  license:
-    name: Apache 2.0
-    url: http://www.apache.org/licenses/LICENSE-2.0.html
-  termsOfService: http://swagger.io/terms/
-  title: Fiber Example API
+    name: ZaphCode
+    url: https://github.com/ZaphCode
+  description: E-commerce REST API built with Go and Fiber using Clean Architecture.
+  title: Go E-commerce API
   version: "1.0"
 paths:
   /address/create:
@@ -1342,6 +1449,41 @@ paths:
       summary: Delete category
       tags:
       - category
+  /order/get/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Get detailed order by id
+      parameters:
+      - description: Order ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dtos.DetailedOrderRespOKDTO'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dtos.DetailRespErrDTO'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/dtos.DetailRespErrDTO'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dtos.DetailRespErrDTO'
+      security:
+      - BearerAuth: []
+      summary: Get auth user detailed order
+      tags:
+      - order
   /order/list:
     get:
       consumes:

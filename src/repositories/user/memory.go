@@ -33,8 +33,10 @@ func NewMemoryUserRepository(im ...domain.User) domain.UserRepository {
 	}
 }
 
-func NewMemoryPersistentUserRepository(datafile string) domain.UserRepository {
-	store := utils.NewSyncMap[uuid.UUID, domain.User](datafile)
+// NewJSONUserRepository returns an in-memory repository backed by a JSON file:
+// data is loaded from path on startup and written back on every change.
+func NewJSONUserRepository(path string) domain.UserRepository {
+	store := utils.NewSyncMap[uuid.UUID, domain.User](path)
 
 	return &memoryUserRepo{
 		shared.MemoryRepo[domain.User]{

@@ -90,4 +90,5 @@ func (s *Server) CreateOrderRoutes(
 	r := s.app.Group("/api/order")
 	r.Get("/list", authMdlw.AuthRequired, paymMdlw.CustomerIDRequired, ordHdlr.GetOrders)
 	r.Post("/new", authMdlw.AuthRequired, paymMdlw.CustomerIDRequired, ordHdlr.CreateOrder)
+	r.Get("/get/:id", authMdlw.AuthRequired, paymMdlw.CustomerIDRequired, ordHdlr.GetOrderById)
 }

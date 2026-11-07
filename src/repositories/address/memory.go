@@ -33,8 +33,10 @@ func NewMemoryAddressRepository(im ...domain.Address) domain.AddressRepository {
 	}
 }
 
-func NewMemoryPersistentAddressRepository(filename string) domain.AddressRepository {
-	store := utils.NewSyncMap[uuid.UUID, domain.Address](filename)
+// NewJSONAddressRepository returns an in-memory repository backed by a JSON file:
+// data is loaded from path on startup and written back on every change.
+func NewJSONAddressRepository(path string) domain.AddressRepository {
+	store := utils.NewSyncMap[uuid.UUID, domain.Address](path)
 
 	return &memoryAddressRepo{
 		shared.MemoryRepo[domain.Address]{

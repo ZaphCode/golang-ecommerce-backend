@@ -35,14 +35,11 @@ func init() {
 	config.MustLoadFirebaseConfig("./config")
 }
 
-// @title Fiber Example API
+// @title Go E-commerce API
 // @version 1.0
-// @description This is a sample swagger for Fiber
-// @termsOfService http://swagger.io/terms/
-// @contact.name API Support
-// @contact.email fiber@swagger.io
-// @license.name Apache 2.0
-// @license.url http://www.apache.org/licenses/LICENSE-2.0.html
+// @description E-commerce REST API built with Go and Fiber using Clean Architecture.
+// @contact.name ZaphCode
+// @contact.url https://github.com/ZaphCode
 // @host localhost:9000
 // @BasePath /api
 // @securityDefinitions.apikey BearerAuth
@@ -76,15 +73,15 @@ func setServerConfiguration(server *api.Server, cfg config.Config) {
 		//* Development
 		fmt.Println("DEV MODE")
 		//userRepo = user.NewMemoryUserRepository(utils.UserAdmin, utils.UserExp1, utils.UserExp2)
-		userRepo = user.NewMemoryPersistentUserRepository("tmpdata/users.json")
+		userRepo = user.NewJSONUserRepository("db/users.json")
 		//prodRepo = product.NewMemoryProductRepository(utils.ProductExpToDev3, utils.ProductExpToDev2, utils.ProductExpToDev1)
-		prodRepo = product.NewMemoryPersistentProductRepository("tmpdata/products.json")
+		prodRepo = product.NewJSONProductRepository("db/products.json")
 		//catRepo = category.NewMemoryCategoryRepository(utils.CategoryExp1, utils.CategoryExp2, utils.CategoryExp3)
-		catRepo = category.NewMemoryPersistentCategoryRepository("tmpdata/categories.json")
+		catRepo = category.NewJSONCategoryRepository("db/categories.json")
 		//addrRepo = address.NewMemoryAddressRepository(utils.AddrExp1, utils.AddrExp2)
-		addrRepo = address.NewMemoryPersistentAddressRepository("tmpdata/addresses.json")
+		addrRepo = address.NewJSONAddressRepository("db/addresses.json")
 		//ordRepo = order.NewMemoryOrderRepository()
-		ordRepo = order.NewMemoryPersistentOrderRepository("tmpdata/orders.json")
+		ordRepo = order.NewJSONOrderRepository("db/orders.json")
 	} else {
 		//* Production
 		client := utils.GetFirestoreClient(config.GetFirebaseApp())
@@ -100,7 +97,7 @@ func setServerConfiguration(server *api.Server, cfg config.Config) {
 	prodSvc := core.NewProductService(prodRepo, catRepo)
 	catSvc := core.NewCategoryService(catRepo, prodRepo)
 	addrSvc := core.NewAddressService(addrRepo, userRepo)
-	ordSvc := core.NewOrderService(ordRepo, addrRepo)
+	ordSvc := core.NewOrderService(ordRepo, addrRepo, prodRepo)
 	pmSvc := payment.NewStripePaymentService(cfg.Stripe.SecretKey, userRepo)
 	emailSvc := email.NewSmtpEmailService()
 	vldSvc := validation.NewValidationService()
