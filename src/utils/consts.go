@@ -43,7 +43,9 @@ var (
 )
 
 const (
-	StatusPending   = "pending"
-	StatusComing    = "coming"
-	StatusCompleted = "completed"
+	StatusPending    = "pending"
+	StatusProcessing = "processing"
+	StatusCancelled  = "cancelled"
+	StatusShipped    = "shipped"
+	StatusCompleted  = "completed"
 )

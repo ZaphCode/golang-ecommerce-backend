@@ -59,12 +59,10 @@ func (h *OrderHandler) CreateOrder(c *fiber.Ctx) error {
 	}
 
 	go func() {
-		if err = h.ordSvc.SetPaidStatus(order.ID, true); err != nil {
+		if err := h.ordSvc.SetPaidStatus(order.ID, true); err != nil {
 			utils.PrintColor("red", "Error updating order status")
 		}
 	}()
 
-	return h.RespOK(c, 200, "order created", fiber.Map{
-		"order": order,
-	})
+	return h.RespOK(c, 200, "order created", order)
 }

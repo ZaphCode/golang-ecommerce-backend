@@ -63,7 +63,7 @@ func (s *prodService) GetLatestProds(lim ...int) ([]domain.Product, error) {
 		return nil, err
 	}
 
-	if len(lim) <= 0 {
+	if len(lim) <= 0 || lim[0] >= len(prods) {
 		return prods, nil
 	}
 	return prods[:lim[0]], nil

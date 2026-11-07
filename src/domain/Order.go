@@ -22,11 +22,25 @@ type OrderProduct struct {
 	Quantity uint      `json:"quantity"`
 }
 
+// DetailedOrder is an Order with its address and products fully loaded.
+// Products shadows Order.Products: each item keeps the ordered quantity.
+type DetailedOrder struct {
+	Order
+	Address  Address                `json:"address"`
+	Products []DetailedOrderProduct `json:"products"`
+}
+
+type DetailedOrderProduct struct {
+	Product
+	Quantity uint `json:"quantity"`
+}
+
 //* Service
 
 type OrderService interface {
 	Create(ord *Order) error
 	GetAll() ([]Order, error)
+	GetDetailedByID(ID, userID uuid.UUID) (*DetailedOrder, error)
 	GetAllByUserID(ursID uuid.UUID) ([]Order, error)
 	UpdateStatus(ID uuid.UUID, status string) error
 	SetPaidStatus(ID uuid.UUID, paid bool) error
@@ -39,6 +53,7 @@ type OrderRepository interface {
 	Save(ord *Order) error
 	Find() ([]Order, error)
 	FindWhere(field, cond string, val any) ([]Order, error)
+	FindByID(ID uuid.UUID) (*Order, error)
 	UpdateField(ID uuid.UUID, field string, val any) error
 	Remove(ID uuid.UUID) error
 }

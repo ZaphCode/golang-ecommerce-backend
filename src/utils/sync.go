@@ -9,12 +9,20 @@ import (
 	"sync"
 )
 
+// SyncMap is a concurrency-safe map guarded by a RWMutex.
+// It can optionally be persisted to a JSON file (see NewSyncMap).
 type SyncMap[K comparable, V any] struct {
 	smap     map[K]V
 	mu       sync.RWMutex
 	datafile string
 }
 
+// NewSyncMap creates an empty SyncMap.
+//
+// filename is optional: when omitted, the map lives only in memory.
+// When given, the map is loaded from that JSON file on creation and
+// written back to it after every Set, Update, Remove or Clear.
+// Only the first value is used; any extra values are ignored.
 func NewSyncMap[K comparable, V any](filename ...string) *SyncMap[K, V] {
 	sm := &SyncMap[K, V]{
 		smap: map[K]V{},
@@ -116,7 +124,7 @@ func (m *SyncMap[K, V]) Get(key K) (V, error) {
 	var zero V
 
 	if !m.exists(key) {
-		return zero, fmt.Errorf("data not found")
+		return zero, ErrNotFound
 	}
 
 	return m.smap[key], nil
@@ -145,7 +153,7 @@ func (m *SyncMap[K, V]) Remove(key K) error {
 
 	delete(m.smap, key)
 	if m.datafile != "" {
-
+		m.saveToFile()
 	}
 
 	return nil

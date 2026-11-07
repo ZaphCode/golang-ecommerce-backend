@@ -33,8 +33,10 @@ func NewMemoryCategoryRepository(im ...domain.Category) domain.CategoryRepositor
 	}
 }
 
-func NewMemoryPersistentCategoryRepository(filename string) domain.CategoryRepository {
-	store := utils.NewSyncMap[uuid.UUID, domain.Category](filename)
+// NewJSONCategoryRepository returns an in-memory repository backed by a JSON file:
+// data is loaded from path on startup and written back on every change.
+func NewJSONCategoryRepository(path string) domain.CategoryRepository {
+	store := utils.NewSyncMap[uuid.UUID, domain.Category](path)
 
 	return &memoryCategoryRepo{
 		shared.MemoryRepo[domain.Category]{

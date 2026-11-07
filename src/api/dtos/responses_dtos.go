@@ -77,6 +77,11 @@ type OrderRespOKDTO struct {
 	Data OrderDTO `json:"data"`
 }
 
+type DetailedOrderRespOKDTO struct {
+	RespOKDTO
+	Data DetailedOrderDTO `json:"data"`
+}
+
 type OrdersRespOKDTO struct {
 	RespOKDTO
 	Data []OrderDTO `json:"data"`

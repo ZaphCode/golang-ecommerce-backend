@@ -133,8 +133,6 @@ func (s discordOAuthServiceImpl) getDiscordTokens(code string) (*DiscordTokens, 
 		return nil, fmt.Errorf("error fetching to discord api")
 	}
 
-	fmt.Println(string(resBody))
-
 	tokens := DiscordTokens{}
 
 	if err := json.Unmarshal(resBody, &tokens); err != nil || tokens.AccessToken == "" {
@@ -166,8 +164,6 @@ func (s discordOAuthServiceImpl) getDiscordUser(tokens *DiscordTokens) (*Discord
 	if err != nil {
 		return nil, err
 	}
-
-	fmt.Println(string(resBody))
 
 	user := DiscordUser{}
 

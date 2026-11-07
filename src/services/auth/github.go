@@ -78,8 +78,6 @@ func (s githubOAuthServiceImpl) GetOAuthUser(code string) (*domain.User, error) 
 		return nil, err
 	}
 
-	fmt.Println(tokens.AccessToken)
-
 	githubUser, err := s.getGithubUser(tokens)
 
 	if err != nil {

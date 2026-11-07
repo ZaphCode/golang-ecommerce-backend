@@ -1,0 +1,31 @@
+{
+  "api": {
+    "port": "",
+    "client_origin": "",
+    "server_host": "",
+    "verification_secret": "",
+    "changepass_secret": "",
+    "access_token_secret": "",
+    "refresh_token_secret": "",
+    "access_token_header": "",
+    "refresh_token_header": "",
+    "refresh_token_cookie": ""
+  },
+  "oauth": {
+    "google": { "client_id": "", "client_secret": "" },
+    "discord": { "client_id": "", "client_secret": "" },
+    "github": { "client_id": "", "client_secret": "" }
+  },
+  "smtp": {
+    "email": "",
+    "password": ""
+  },
+  "storage": {
+    "bucket": "",
+    "upload_folder": ""
+  },
+  "stripe": {
+    "public_key": "",
+    "secret_key": ""
+  }
+}

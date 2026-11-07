@@ -12,15 +12,18 @@ import (
 type orderService struct {
 	ordRepo  domain.OrderRepository
 	addrRepo domain.AddressRepository
+	prodRepo domain.ProductRepository
 }
 
 func NewOrderService(
 	ordRepo domain.OrderRepository,
 	addrRepo domain.AddressRepository,
+	prodRepo domain.ProductRepository,
 ) domain.OrderService {
 	return &orderService{
 		ordRepo:  ordRepo,
 		addrRepo: addrRepo,
+		prodRepo: prodRepo,
 	}
 }
 
@@ -36,13 +39,63 @@ func (s *orderService) Create(ord *domain.Order) error {
 	}
 
 	ord.ID = ID
-	ord.Status = utils.StatusPending
+	ord.Status = utils.StatusProcessing
 	ord.CreatedAt = time.Now().Unix()
 	ord.UpdatedAt = time.Now().Unix()
 
-	s.ordRepo.Save(ord)
+	if err := s.ordRepo.Save(ord); err != nil {
+		return fmt.Errorf("error saving order: %w", err)
+	}
 
 	return nil
+}
+
+// GetDetailedByID returns the order with its address and products loaded.
+// It returns (nil, nil) when the order doesn't exist or doesn't belong to userID,
+// so callers can't tell other users' orders apart from missing ones.
+func (s *orderService) GetDetailedByID(ID, userID uuid.UUID) (*domain.DetailedOrder, error) {
+	ord, err := s.ordRepo.FindByID(ID)
+
+	if err != nil {
+		return nil, fmt.Errorf("error getting order: %w", err)
+	}
+
+	// Repositories return (nil, nil) when the resource doesn't exist.
+	if ord == nil || ord.UserID != userID {
+		return nil, nil
+	}
+
+	detailedOrder := domain.DetailedOrder{Order: *ord}
+
+	addr, err := s.addrRepo.FindByID(ord.AddressID)
+
+	if err != nil {
+		return nil, fmt.Errorf("error getting address: %w", err)
+	}
+
+	// The address may have been deleted after the order was placed:
+	// keep the order and leave the address empty.
+	if addr != nil {
+		detailedOrder.Address = *addr
+	}
+
+	for _, op := range ord.Products {
+		prod, err := s.prodRepo.FindByID(op.ID)
+
+		if err != nil {
+			return nil, fmt.Errorf("error getting product: %w", err)
+		}
+
+		// Skip products that no longer exist instead of failing the whole order.
+		if prod != nil {
+			detailedOrder.Products = append(detailedOrder.Products, domain.DetailedOrderProduct{
+				Product:  *prod,
+				Quantity: op.Quantity,
+			})
+		}
+	}
+
+	return &detailedOrder, nil
 }
 
 func (s *orderService) GetAll() ([]domain.Order, error) {

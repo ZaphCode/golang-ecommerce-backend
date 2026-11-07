@@ -33,8 +33,10 @@ func NewMemoryOrderRepository(im ...domain.Order) domain.OrderRepository {
 	}
 }
 
-func NewMemoryPersistentOrderRepository(filename string) domain.OrderRepository {
-	store := utils.NewSyncMap[uuid.UUID, domain.Order](filename)
+// NewJSONOrderRepository returns an in-memory repository backed by a JSON file:
+// data is loaded from path on startup and written back on every change.
+func NewJSONOrderRepository(path string) domain.OrderRepository {
+	store := utils.NewSyncMap[uuid.UUID, domain.Order](path)
 
 	return &memoryOrderRepo{
 		shared.MemoryRepo[domain.Order]{
