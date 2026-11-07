@@ -230,4 +230,4 @@ Service tests use in-memory repositories, so they are fast and need no external 
 
 ---
 
-Made by [ZaphCode](https://github.com/ZaphCode).
+Made by [ZaphCode](https://github.com/ZaphCode) (Omar Urquidez)

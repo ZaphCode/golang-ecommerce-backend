@@ -4,10 +4,11 @@
 export
 
 SWAG_VERSION := v1.8.9
+SWAGGER_URL ?= http://localhost:9000/docs/index.html
 
 .DEFAULT_GOAL := dev
 
-.PHONY: dev run-backend-dev run-frontend-dev open-frontend gen-docs install-swagger check-frontend-env
+.PHONY: dev run-backend-dev run-frontend-dev open-frontend open-swagger gen-docs install-swagger check-frontend-env
 
 ## Run backend, frontend and open the browser
 dev:
@@ -24,6 +25,10 @@ run-frontend-dev: check-frontend-env
 ## Open the frontend in the browser (needs FRONTEND_URL)
 open-frontend: check-frontend-env
 	sleep 3 && open "$(FRONTEND_URL)"
+
+## Open the Swagger UI in the browser (override with SWAGGER_URL)
+open-swagger:
+	open "$(SWAGGER_URL)"
 
 ## Regenerate Swagger docs into ./docs
 gen-docs:

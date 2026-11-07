@@ -8,3 +8,4 @@ config/app_config.json
 db/
 .DS_Store
 .env
+skills/system
